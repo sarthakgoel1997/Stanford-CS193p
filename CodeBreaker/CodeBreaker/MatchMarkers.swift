@@ -34,6 +34,10 @@ struct MatchMarkers: View {
             HStack {
                 ForEach(matches[mid...].indices, id: \.self) { index in
                     matchMarker(peg: index)
+                    
+                    if matches.count % 2 != 0 && index == matches.count - 1 {
+                        matchMarker(peg: index + 1)
+                    }
                 }
                 
                 if(matches.count == 0) {
