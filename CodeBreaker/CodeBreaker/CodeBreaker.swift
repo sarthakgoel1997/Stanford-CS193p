@@ -7,7 +7,26 @@
 
 import SwiftUI
 
-typealias Peg = Color
+typealias Peg = String
+
+let supportedColors: [String: Color] = [
+    "red": .red,
+    "blue": .blue,
+    "green": .green,
+    "yellow": .yellow,
+    "black": .black,
+    "orange": .orange,
+    "pink": .pink,
+    "purple": .purple,
+    "brown": .brown,
+    "cyan": .cyan
+]
+
+extension String {
+    var pegColor: Color? {
+        supportedColors[self]
+    }
+}
 
 struct CodeBreaker {
     var masterCode: Code
@@ -15,7 +34,15 @@ struct CodeBreaker {
     var attempts = [Code]()
     var pegChoices: [Peg]
     
-    init(pegChoices: [Peg] = [.red, .green, .yellow, .blue]) {
+    static var currentGame: String = ""
+    
+    init(pegChoices: [Peg] = ["red", "green", "yellow", "blue"]) {
+        if let _ = pegChoices[0].pegColor {
+            CodeBreaker.currentGame = "color"
+        } else {
+            CodeBreaker.currentGame = "emoji"
+        }
+        
         self.pegChoices = pegChoices
         masterCode = Code(kind: .master, pegsCount: pegChoices.count)
         masterCode.randomize(from: pegChoices)
@@ -43,8 +70,9 @@ struct CodeBreaker {
     
     mutating func randomizePegChoices() {
         let count = Int.random(in: 3...6)
-        let availableColors: [Color] = [.red, .green, .yellow, .blue, .orange, .purple, .pink, .cyan]
+        let availableColors: [String] = ["red", "green", "yellow", "blue", "orange", "purple", "pink", "cyan"]
         pegChoices = Array(availableColors.shuffled().prefix(count))
+        CodeBreaker.currentGame = "color"
     }
     
     func emptyAttempt() -> Bool {
@@ -89,7 +117,7 @@ struct Code {
         pegs = Array(repeating: Code.missing, count: pegsCount)
     }
     
-    static let missing: Peg = .clear
+    static let missing: Peg = ""
     
     enum Kind: Equatable {
         case master
