@@ -25,11 +25,6 @@ struct MatchMarkers: View {
                     matchMarker(peg: index)
                 }
                 
-                if(matches.count == 0) {
-                    matchMarker(peg: 0)
-                    matchMarker(peg: 1)
-                }
-                
             }
             HStack {
                 ForEach(matches[mid...].indices, id: \.self) { index in
@@ -38,11 +33,6 @@ struct MatchMarkers: View {
                     if matches.count % 2 != 0 && index == matches.count - 1 {
                         matchMarker(peg: index + 1)
                     }
-                }
-                
-                if(matches.count == 0) {
-                    matchMarker(peg: 2)
-                    matchMarker(peg: 3)
                 }
             }
         }

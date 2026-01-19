@@ -46,7 +46,7 @@ struct CodeBreakerView: View {
     func coloredPeg(code: Code, index: Int) -> some View {
         RoundedRectangle(cornerRadius: 10)
             .overlay {
-                if code.pegs[index] == Code.missing {
+                if code.pegs[index] == Code.missingPeg {
                     RoundedRectangle(cornerRadius: 10)
                         .strokeBorder(Color.gray)
                 }
@@ -67,7 +67,7 @@ struct CodeBreakerView: View {
             .minimumScaleFactor(9/120)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .overlay {
-                if(code.pegs[index] == Code.missing) {
+                if(code.pegs[index] == Code.missingPeg) {
                     Circle()
                         .stroke(Color.gray, lineWidth: 2)
                 }
@@ -84,17 +84,23 @@ struct CodeBreakerView: View {
     func view(for code: Code) -> some View {
         HStack {
             ForEach(code.pegs.indices, id: \.self) { index in
-                
                 if game.currentGame == .color {
                     coloredPeg(code: code, index: index)
                 } else {
                     emoji(code: code, index: index)
                 }
             }
-            MatchMarkers(matches: code.matches)
+            
+            Rectangle()
+                .foregroundStyle(.clear)
+                .aspectRatio(1, contentMode: .fit)
                 .overlay {
-                    if code.kind == .guess {
-                        guessButton
+                    if let matches = code.matches {
+                        MatchMarkers(matches: matches)
+                    } else {
+                        if code.kind == .guess {
+                            guessButton
+                        }
                     }
                 }
         }
